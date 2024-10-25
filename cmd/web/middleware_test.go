@@ -20,7 +20,6 @@ func Test_application_addIPToContext(t *testing.T) {
 		{"X-Forwarded-For", "192.3.2.1", "", false},
 		{"", "", "hello:world", false},
 	}
-	var app application
 	// create a dummy handler that we'll use to check the context
 	nextHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// make sure the value exist in the context
@@ -58,8 +57,6 @@ func Test_application_addIPToContext(t *testing.T) {
 }
 
 func Test_application_ipFromContext(t *testing.T) {
-	// create an app var of type application
-	var app application
 	// get a context
 	ctx := context.Background()
 	// put something in the context
