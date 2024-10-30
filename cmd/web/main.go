@@ -1,21 +1,25 @@
 package main
 
 import (
+	"encoding/gob"
 	"flag"
 	"log"
 	"net/http"
-	"personal-projects/webapp/pkg/db"
+	"personal-projects/webapp/pkg/data"
+	"personal-projects/webapp/pkg/repository"
+	"personal-projects/webapp/pkg/repository/dbrepo"
 
 	"github.com/alexedwards/scs/v2"
 )
 
 type application struct {
 	DSN     string
-	DB      db.PostgresConn
+	DB      repository.DatabaseRepo
 	Session *scs.SessionManager
 }
 
 func main() {
+	gob.Register(data.User{})
 	// set up an app config
 	app := application{}
 
@@ -28,7 +32,7 @@ func main() {
 	}
 	defer conn.Close()
 
-	app.DB = db.PostgresConn{DB: conn}
+	app.DB = &dbrepo.PostgresDBRepo{DB: conn}
 
 	// get a session manager
 	app.Session = getSession()
