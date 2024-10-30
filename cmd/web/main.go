@@ -1,16 +1,16 @@
 package main
 
 import (
-	"database/sql"
 	"flag"
 	"github.com/alexedwards/scs/v2"
 	"log"
 	"net/http"
+	"personal-projects/webapp/pkg/db"
 )
 
 type application struct {
 	Session *scs.SessionManager
-	DB      *sql.DB
+	DB      db.PostgresConn
 	DSN     string
 }
 
@@ -26,7 +26,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	app.DB = conn
+	defer conn.Close()
+
+	app.DB = db.PostgresConn{DB: conn}
 	//get a session manager
 	app.Session = getSession()
 	// get application routes
