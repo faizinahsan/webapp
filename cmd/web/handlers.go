@@ -73,7 +73,9 @@ func (app *application) Login(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(err)
 	}
-	log.Println("From database: ", user.FirstName)
+
+	log.Println("From database:", user.FirstName)
+
 	log.Println(email, password)
 
 	fmt.Fprint(w, email)

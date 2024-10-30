@@ -3,7 +3,6 @@ package db
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"golang.org/x/crypto/bcrypt"
 	"log"
 	"personal-projects/webapp/pkg/data"
@@ -117,7 +116,6 @@ func (m *PostgresConn) GetUserByEmail(email string) (*data.User, error) {
 	)
 
 	if err != nil {
-		fmt.Println("Error scanning", err)
 		return nil, err
 	}
 

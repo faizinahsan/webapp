@@ -2,10 +2,11 @@ package main
 
 import (
 	"database/sql"
+	"log"
+
 	_ "github.com/jackc/pgconn"
 	_ "github.com/jackc/pgx/v4"
 	_ "github.com/jackc/pgx/v4/stdlib"
-	"log"
 )
 
 func openDB(dsn string) (*sql.DB, error) {
@@ -13,11 +14,13 @@ func openDB(dsn string) (*sql.DB, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	err = db.Ping()
 	if err != nil {
 		return nil, err
 	}
-	return nil, nil
+
+	return db, nil
 }
 
 func (app *application) connectToDB() (*sql.DB, error) {
@@ -25,6 +28,8 @@ func (app *application) connectToDB() (*sql.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	log.Println("Connected to Postgresql")
+
+	log.Println("Connected to Postgres!")
+
 	return connection, nil
 }
