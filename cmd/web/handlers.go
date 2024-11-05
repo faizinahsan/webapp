@@ -48,6 +48,9 @@ func (app *application) render(w http.ResponseWriter, r *http.Request, t string,
 	td.IP = app.ipFromContext(r.Context())
 	td.Error = app.Session.PopString(r.Context(), "error")
 	td.Flash = app.Session.PopString(r.Context(), "flash")
+	if app.Session.Exists(r.Context(), "user") {
+		td.User = app.Session.Get(r.Context(), "user").(data.User)
+	}
 
 	// execute the template, passing it data, if any
 	err = parsedTemplate.Execute(w, td)
@@ -118,16 +121,34 @@ func (app *application) authenticate(r *http.Request, user *data.User, password 
 
 func (app *application) UploadProfilePic(w http.ResponseWriter, r *http.Request) {
 	// call a function that extracts a file from an upload (request)
-
+	files, err := app.UploadFiles(r, "./static/img")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 	// get user from the session
+	user := app.Session.Get(r.Context(), "user").(data.User)
 
 	// create a var of type data.UserImage
-
+	var i = data.UserImage{
+		UserID:   user.ID,
+		FileName: files[0].OriginalFileName,
+	}
 	//insert the user image into user_images
-
+	_, err = app.DB.InsertUserImage(i)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 	// refresh the session variable "user"
-
+	updatedUser, err := app.DB.GetUser(user.ID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	app.Session.Put(r.Context(), "user", updatedUser)
 	// redirect back to profile page
+	http.Redirect(w, r, "/user/profile", http.StatusSeeOther)
 }
 
 type UploadedFile struct {
