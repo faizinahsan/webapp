@@ -10,8 +10,8 @@ import (
 	"time"
 )
 
-const jwtTokenExpiry = time.Minute * 15
-const refreshTokenExpiry = time.Hour * 24 // will not contain much information
+var jwtTokenExpiry = time.Minute * 15
+var refreshTokenExpiry = time.Hour * 24 // will not contain much information
 
 type TokenPairs struct {
 	Token        string `json:"access_token"`
