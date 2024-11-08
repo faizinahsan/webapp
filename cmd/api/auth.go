@@ -23,7 +23,7 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-func (app *application) GetTokenFromHeaderandVerify(w http.ResponseWriter, r *http.Request) (string, *Claims, error) {
+func (app *application) GetTokenFromHeaderAndVerify(w http.ResponseWriter, r *http.Request) (string, *Claims, error) {
 	// add a header
 	w.Header().Add("Vary", "Authorization")
 
